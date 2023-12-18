@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./PHP/Boilerplate/src:/var/www/html/src
+      - ./PHP/Boilerplate/composer.json:/var/www/html/composer.json
+      - ./PHP/Boilerplate/features:/var/www/html/features
+    ports:
+      - "8000:80"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fleet_management
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fleet_management
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
