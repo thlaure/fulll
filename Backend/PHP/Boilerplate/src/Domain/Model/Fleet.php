@@ -7,15 +7,15 @@ namespace Domain\Model;
  */
 class Fleet
 {
-    private string $id;
+    private int $id;
     private array $vehicles = [];
 
     /**
      * Initializes a new instance of the Fleet class.
      *
-     * @param string $id The identifier of the fleet.
+     * @param int $id The identifier of the fleet.
      */
-    public function __construct(string $id)
+    public function __construct(int $id)
     {
         $this->id = $id;
     }
@@ -23,9 +23,9 @@ class Fleet
     /**
      * Gets the identifier of the fleet.
      *
-     * @return string The fleet identifier.
+     * @return int The fleet identifier.
      */
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
