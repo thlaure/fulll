@@ -12,15 +12,15 @@ class VehicleRepository
     private array $vehicles = [];
 
     /**
-     * Finds a vehicles by its identifier.
+     * Gets a vehicle by its identifier.
      *
-     * @param string $plateNumber The plate number of the vehicle.
+     * @param int $id The identifier of the vehicle.
      *
      * @return Vehicle|null The vehicle, or null if not found.
      */
-    public function find(string $plateNumber): ?Vehicle
+    public function getById(int $id): ?Vehicle
     {
-        return $this->vehicles[$plateNumber] ?? null;
+        return $this->vehicles[$id] ?? null;
     }
 
     /**
@@ -30,6 +30,6 @@ class VehicleRepository
      */
     public function save(Vehicle $vehicle): void
     {
-        $this->vehicles[$vehicle->getPlateNumber()] = $vehicle;
+        $this->vehicles[$vehicle->getId()] = $vehicle;
     }
 }

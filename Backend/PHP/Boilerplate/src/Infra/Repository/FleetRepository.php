@@ -12,13 +12,13 @@ class FleetRepository
     private array $fleets = [];
 
     /**
-     * Finds a fleet by its identifier.
+     * Gets a fleet by its identifier.
      *
      * @param int $fleetId The identifier of the fleet.
      *
      * @return Fleet|null The fleet, or null if not found.
      */
-    public function find(int $fleetId): ?Fleet
+    public function getById(int $fleetId): ?Fleet
     {
         return $this->fleets[$fleetId] ?? null;
     }
