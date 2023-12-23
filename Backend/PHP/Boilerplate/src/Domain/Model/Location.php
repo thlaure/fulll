@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Model;
+namespace Fulll\Domain\Model;
 
 /**
  * Represents a location on the Earth using coordinates.

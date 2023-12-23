@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Model;
+namespace Fulll\Domain\Model;
 
 /**
  * Represents a vehicle within the fleet.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Domain\Model;
+namespace Fulll\Domain\Model;
 
 /**
  * Represents a fleet of vehicles.
@@ -48,5 +48,16 @@ class Fleet
     public function getVehicles(): array
     {
         return $this->vehicles;
+    }
+
+    public function hasVehicle(Vehicle $vehicle): bool
+    {
+        foreach ($this->vehicles as $v) {
+            if ($v->getId() === $vehicle->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

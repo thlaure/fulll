@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Handler;
+namespace Fulll\App\Handler;
 
-use App\Command\RegisterVehicleCommand;
-use Domain\Model\Fleet;
-use Domain\Model\Vehicle;
-use Infra\Repository\FleetRepository;
-use Infra\Repository\VehicleRepository;
+use Fulll\App\Command\RegisterVehicleCommand;
+use Fulll\Domain\Model\Fleet;
+use Fulll\Domain\Model\Vehicle;
+use Fulll\Infra\Repository\FleetRepository;
+use Fulll\Infra\Repository\VehicleRepository;
 
 /**
  * RegisterVehicleHandler handles the registration of a vehicle into a fleet.
@@ -42,23 +42,23 @@ class RegisterVehicleHandler
     {
         $fleetId = $command->getFleetId();
         $vehicleId = $command->getVehicleId();
-        $plateNumber = $command->getPlateNumber();
 
         $fleet = $this->fleetRepository->getById($fleetId);
         if ($fleet === null) {
-            $fleet = new Fleet($fleetId);
+            throw new \RuntimeException('Fleet not found.');
         }
 
-        $existingVehicle = $this->vehicleRepository->getById($vehicleId);
-        if ($existingVehicle !== null) {
-            // Handle scenario: "I can't register the same vehicle twice"
-            throw new \RuntimeException('This vehicle has already been registered.');
+        $vehicle = $this->vehicleRepository->getById($vehicleId);
+        if ($vehicle === null) {
+            throw new \RuntimeException('Vehicle not found.');
         }
 
-        $vehicle = new Vehicle($vehicleId, $plateNumber);
+        if ($fleet->hasVehicle($vehicle)) {
+            throw new \RuntimeException('Vehicle is already registered in this fleet.');
+        }
+
         $fleet->addVehicle($vehicle);
 
         $this->fleetRepository->save($fleet);
-        $this->vehicleRepository->save($vehicle);
     }
 }

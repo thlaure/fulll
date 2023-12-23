@@ -1,8 +1,8 @@
 <?php
 
-namespace Infra\Repository;
+namespace Fulll\Infra\Repository;
 
-use Domain\Model\Vehicle;
+use Fulll\Domain\Model\Vehicle;
 
 /**
  * Repository for managing vehicles.

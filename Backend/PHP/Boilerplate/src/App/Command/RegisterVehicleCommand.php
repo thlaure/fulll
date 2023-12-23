@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace Fulll\App\Command;
 
 /**
  * RegisterVehicleCommand represents the command to register a vehicle into a fleet.
