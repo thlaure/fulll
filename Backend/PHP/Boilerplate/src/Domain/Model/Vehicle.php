@@ -9,6 +9,7 @@ class Vehicle
 {
     private int $id;
     private string $plateNumber;
+    private ?Location $location = null;
 
     /**
      * Initializes a new instance of the Vehicle class.
@@ -40,5 +41,25 @@ class Vehicle
     public function getPlateNumber(): string
     {
         return $this->plateNumber;
+    }
+    
+    /**
+     * Gets the location of the vehicle.
+     *
+     * @return Location|null The location of the vehicle, or null if not localized.
+     */
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    /**
+     * Localizes the vehicle to a specific location.
+     *
+     * @param Location $location The location to which the vehicle is localized.
+     */
+    public function localize(Location $location): void
+    {
+        $this->location = $location;
     }
 }
