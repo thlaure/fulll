@@ -5,8 +5,11 @@ declare(strict_types=1);
 use Fulll\Domain\Model\Fleet;
 use Fulll\Domain\Model\Vehicle;
 use Behat\Behat\Context\Context;
+use Fulll\Domain\Model\Location;
 use Fulll\Infra\Repository\FleetRepository;
+use Fulll\App\Command\LocalizeVehicleCommand;
 use Fulll\App\Command\RegisterVehicleCommand;
+use Fulll\App\Handler\LocalizeVehicleHandler;
 use Fulll\App\Handler\RegisterVehicleHandler;
 use Fulll\Infra\Repository\VehicleRepository;
 
@@ -19,12 +22,15 @@ class FeatureContext implements Context
     private Fleet $otherUserFleet;
     private Vehicle $vehicle;
     private ?string $exceptionMessage = null;
+    private ?Location $location = null;
+    private LocalizeVehicleHandler $localizeVehicleHandler;
 
     public function __construct()
     {
         $this->fleetRepository = new FleetRepository();
         $this->vehicleRepository = new VehicleRepository();
         $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleetRepository, $this->vehicleRepository);
+        $this->localizeVehicleHandler = new LocalizeVehicleHandler($this->fleetRepository, $this->vehicleRepository);
     }
 
     /**
@@ -114,5 +120,63 @@ class FeatureContext implements Context
     {
         $command = new RegisterVehicleCommand($this->otherUserFleet->getId(), $this->vehicle->getId(), $this->vehicle->getPlateNumber());
         $this->registerVehicleHandler->handle($command);
+    }
+
+    /**
+     * @Given a location
+     */
+    public function aLocation()
+    {
+        $this->location = new Location(1.0, 1.0);
+    }
+
+    /**
+     * @When I park my vehicle at this location
+     */
+    public function iParkMyVehicleAtThisLocation()
+    {
+        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        $this->localizeVehicleHandler->handle($command);
+    }
+
+    /**
+     * @Then the known location of my vehicle should verify this location
+     */
+    public function theKnownLocationOfMyVehicleShouldVerifyThisLocation()
+    {
+        $vehicle = $this->vehicleRepository->getById($this->vehicle->getId());
+        $location = $vehicle->getLocation();
+
+        assert($location->getLat() === $this->location->getLat() && $location->getLng() === $this->location->getLng(), 'Vehicle is not parked at the expected location.');
+    }
+
+    /**
+     * @Given my vehicle has been parked into this location
+     */
+    public function myVehicleHasBeenParkedIntoThisLocation()
+    {
+        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        $this->localizeVehicleHandler->handle($command);
+    }
+
+    /**
+     * @When I try to park my vehicle at this location
+     */
+    public function iTryToParkMyVehicleAtThisLocation()
+    {
+        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        try {
+            $this->localizeVehicleHandler->handle($command);
+        } catch (\RuntimeException $exception) {
+            $this->exceptionMessage = $exception->getMessage();
+        }
+    }
+
+    /**
+     * @Then I should be informed that my vehicle is already parked at this location
+     */
+    public function iShouldBeInformedThatMyVehicleIsAlreadyParkedAtThisLocation()
+    {
+        assert(isset($this->exceptionMessage) && strpos($this->exceptionMessage, 'Vehicle is already parked at this location.') !== false);
     }
 }
