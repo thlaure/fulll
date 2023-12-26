@@ -50,6 +50,13 @@ class Fleet
         return $this->vehicles;
     }
 
+    /**
+     * Verifies if the fleet has a specific vehicle.
+     *
+     * @param Vehicle $vehicle The vehicle to be verified.
+     * 
+     * @return boolean
+     */
     public function hasVehicle(Vehicle $vehicle): bool
     {
         foreach ($this->vehicles as $v) {
