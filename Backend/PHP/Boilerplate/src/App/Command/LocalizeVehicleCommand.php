@@ -13,6 +13,7 @@ class LocalizeVehicleCommand
     private int $vehicleId;
     private float $lat;
     private float $lng;
+    private ?float $alt;
 
     /**
      * Constructs a new LocalizeVehicleCommand instance.
@@ -21,13 +22,15 @@ class LocalizeVehicleCommand
      * @param int      $vehicleId    The ID of the vehicle.
      * @param float    $lat           The latitude coordinate.
      * @param float    $lng           The longitude coordinate.
+     * @param float    $alt           The altitude coordinate.
      */
-    public function __construct(int $fleetId, int $vehicleId, float $lat, float $lng)
+    public function __construct(int $fleetId, int $vehicleId, float $lat, float $lng, float $alt = null)
     {
         $this->fleetId = $fleetId;
         $this->vehicleId = $vehicleId;
         $this->lat = $lat;
         $this->lng = $lng;
+        $this->alt = $alt;
     }
 
     /**
@@ -71,12 +74,22 @@ class LocalizeVehicleCommand
     }
 
     /**
+     * Gets the altitude coordinate associated with the command.
+     *
+     * @return float The altitude coordinate.
+     */
+    public function getAlt(): float
+    {
+        return $this->alt;
+    }
+
+    /**
      * Creates a Location object from the command data.
      *
      * @return Location The location.
      */
     public function getLocation(): Location
     {
-        return new Location($this->lat, $this->lng);
+        return new Location($this->lat, $this->lng, $this->alt);
     }
 }
