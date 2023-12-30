@@ -8,16 +8,17 @@ namespace Fulll\Domain\Model;
 class Fleet
 {
     private int $id;
+    private int $userId;
     private array $vehicles = [];
 
     /**
      * Initializes a new instance of the Fleet class.
      *
-     * @param int $id The identifier of the fleet.
+     * @param int $userId The identifier of user of the fleet.
      */
-    public function __construct(int $id)
+    public function __construct(int $userId)
     {
-        $this->id = $id;
+        $this->userId = $userId;
     }
 
     /**
@@ -28,6 +29,40 @@ class Fleet
     public function getId(): int
     {
         return $this->id;
+    }
+    
+    /**
+     * Sets the identifier of the fleet.
+     *
+     * @param int $id The fleet identifier.
+     * 
+     * @return void
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * Gets the identifier of the user of the fleet.
+     *
+     * @return int The user identifier.
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
+     * Sets the identifier of the user of the fleet.
+     *
+     * @param int $userId The user identifier.
+     * 
+     * @return void
+     */
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
     }
 
     /**
@@ -60,7 +95,7 @@ class Fleet
     public function hasVehicle(Vehicle $vehicle): bool
     {
         foreach ($this->vehicles as $v) {
-            if ($v->getId() === $vehicle->getId()) {
+            if ($v->getPlateNumber() === $vehicle->getPlateNumber()) {
                 return true;
             }
         }

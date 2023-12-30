@@ -86,7 +86,7 @@ class Location
      * 
      * @return void
      */
-    public function setAlt(float $alt): void
+    public function setAlt(?float $alt): void
     {
         $this->alt = $alt;
     }

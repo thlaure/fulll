@@ -14,12 +14,10 @@ class Vehicle
     /**
      * Initializes a new instance of the Vehicle class.
      *
-     * @param int $id The unique identifier of the vehicle.
      * @param string $plateNumber The plate number of the vehicle.
      */
-    public function __construct(int $id, string $plateNumber)
+    public function __construct(string $plateNumber)
     {
-        $this->id = $id;
         $this->plateNumber = $plateNumber;
     }
 
@@ -34,6 +32,18 @@ class Vehicle
     }
 
     /**
+     * Sets the unique identifier of the vehicle.
+     *
+     * @param int $id The unique identifier.
+     * 
+     * @return void
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Gets the plate number of the vehicle.
      *
      * @return string The plate number.
@@ -41,6 +51,18 @@ class Vehicle
     public function getPlateNumber(): string
     {
         return $this->plateNumber;
+    }
+
+    /**
+     * Sets the plate number of the vehicle.
+     *
+     * @param string $plateNumber The plate number.
+     * 
+     * @return void
+     */
+    public function setPlateNumber(string $plateNumber): void
+    {
+        $this->plateNumber = $plateNumber;
     }
     
     /**
@@ -58,7 +80,7 @@ class Vehicle
      *
      * @param Location $location The location to which the vehicle is localized.
      */
-    public function localize(Location $location): void
+    public function setLocation(Location $location): void
     {
         $this->location = $location;
     }
