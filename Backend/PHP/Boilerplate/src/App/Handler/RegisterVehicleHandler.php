@@ -40,15 +40,15 @@ class RegisterVehicleHandler
      */
     public function handle(RegisterVehicleCommand $command): void
     {
-        $fleetId = $command->getFleetId();
-        $vehicleId = $command->getVehicleId();
+        $fleetUserId = $command->getFleetUserId();
+        $plateNumber = $command->getPlateNumber();
 
-        $fleet = $this->fleetRepository->getById($fleetId);
+        $fleet = $this->fleetRepository->getByUserId($fleetUserId);
         if ($fleet === null) {
             throw new \RuntimeException('Fleet not found.');
         }
 
-        $vehicle = $this->vehicleRepository->getById($vehicleId);
+        $vehicle = $this->vehicleRepository->getByPlateNumber($plateNumber);
         if ($vehicle === null) {
             throw new \RuntimeException('Vehicle not found.');
         }

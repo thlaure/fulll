@@ -12,15 +12,21 @@ class FleetRepository
     private array $fleets = [];
 
     /**
-     * Gets a fleet by its identifier.
+     * Gets a fleet by its user identifier.
      *
-     * @param int $fleetId The identifier of the fleet.
+     * @param int $userId The identifier of the user of the fleet.
      *
      * @return Fleet|null The fleet, or null if not found.
      */
-    public function getById(int $fleetId): ?Fleet
+    public function getByUserId(int $userId): ?Fleet
     {
-        return $this->fleets[$fleetId] ?? null;
+        foreach ($this->fleets as $fleet) {
+            if ($fleet->getUserId() === $userId) {
+                return $fleet;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -30,6 +36,6 @@ class FleetRepository
      */
     public function save(Fleet $fleet): void
     {
-        $this->fleets[$fleet->getId()] = $fleet;
+        $this->fleets[] = $fleet;
     }
 }

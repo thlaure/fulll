@@ -39,17 +39,18 @@ class LocalizeVehicleHandler
      */
     public function handle(LocalizeVehicleCommand $command): void
     {
-        $fleetId = $command->getFleetId();
-        $vehicleId = $command->getVehicleId();
+        $fleetUserId = $command->getFleetUserId();
+        $plateNumber = $command->getPlateNumber();
         $lat = $command->getLat();
         $lng = $command->getLng();
+        $alt = $command->getAlt();
 
-        $fleet = $this->fleetRepository->getById($fleetId);
+        $fleet = $this->fleetRepository->getByUserId($fleetUserId);
         if ($fleet === null) {
             throw new \RuntimeException('Fleet not found.');
         }
 
-        $vehicle = $this->vehicleRepository->getById($vehicleId);
+        $vehicle = $this->vehicleRepository->getByPlateNumber($plateNumber);
         if ($vehicle === null) {
             throw new \RuntimeException('Vehicle not found.');
         }
@@ -59,12 +60,12 @@ class LocalizeVehicleHandler
         }
 
         $currentLocation = $vehicle->getLocation();
-        if ($currentLocation !== null && $currentLocation->getLat() === $lat && $currentLocation->getLng() === $lng) {
+        if ($currentLocation !== null && $currentLocation->getLat() === $lat && $currentLocation->getLng() === $lng && $currentLocation->getAlt() === $alt) {
             throw new \RuntimeException('Vehicle is already parked at this location.');
         }
 
-        $location = new Location($lat, $lng);
-        $vehicle->localize($location);
+        $location = new Location($lat, $lng, $alt);
+        $vehicle->setLocation($location);
 
         $this->vehicleRepository->save($vehicle);
     }

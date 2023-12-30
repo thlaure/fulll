@@ -10,42 +10,30 @@ namespace Fulll\App\Command;
  */
 class RegisterVehicleCommand
 {
-    private int $fleetId;
+    private int $fleetUserId;
     private int $vehicleId;
     private string $plateNumber;
 
     /**
      * Constructs a new RegisterVehicleCommand instance.
      *
-     * @param int    $fleetId      The ID of the fleet.
-     * @param int    $vehicleId    The ID of the vehicle.
+     * @param int    $fleetUserId      The user ID of the fleet.
      * @param string $plateNumber  The plate number of the vehicle.
      */
-    public function __construct(int $fleetId, int $vehicleId, string $plateNumber)
+    public function __construct(int $fleetUserId, string $plateNumber)
     {
-        $this->fleetId = $fleetId;
-        $this->vehicleId = $vehicleId;
+        $this->fleetUserId = $fleetUserId;
         $this->plateNumber = $plateNumber;
     }
 
     /**
-     * Gets the fleet ID associated with the command.
+     * Gets the fleet user ID associated with the command.
      *
-     * @return int The fleet ID.
+     * @return int The fleet user ID.
      */
-    public function getFleetId(): int
+    public function getFleetUserId(): int
     {
-        return $this->fleetId;
-    }
-
-    /**
-     * Gets the vehicle ID associated with the command.
-     *
-     * @return int The vehicle ID.
-     */
-    public function getVehicleId(): int
-    {
-        return $this->vehicleId;
+        return $this->fleetUserId;
     }
 
     /**

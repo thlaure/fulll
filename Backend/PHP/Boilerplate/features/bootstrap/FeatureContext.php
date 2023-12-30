@@ -48,7 +48,7 @@ class FeatureContext implements Context
      */
     public function aVehicle()
     {
-        $this->vehicle = new Vehicle(1, 'ABC123');
+        $this->vehicle = new Vehicle('ABC123');
 
         $this->vehicleRepository->save($this->vehicle);
     }
@@ -58,7 +58,7 @@ class FeatureContext implements Context
      */
     public function iRegisterThisVehicleIntoMyFleet()
     {
-        $command = new RegisterVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->vehicle->getPlateNumber());
+        $command = new RegisterVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber());
         $this->registerVehicleHandler->handle($command);
     }
 
@@ -67,7 +67,7 @@ class FeatureContext implements Context
      */
     public function thisVehicleShouldBePartOfMyVehicleFleet()
     {
-        $fleet = $this->fleetRepository->getById($this->myFleet->getId());
+        $fleet = $this->fleetRepository->getByUserId($this->myFleet->getUserId());
         $vehicles = $fleet->getVehicles();
 
         assert(in_array($this->vehicle, $vehicles), 'Vehicle is not part of the fleet.');
@@ -78,7 +78,7 @@ class FeatureContext implements Context
      */
     public function iHaveRegisteredThisVehicleIntoMyFleet()
     {
-        $command = new RegisterVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->vehicle->getPlateNumber());
+        $command = new RegisterVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber());
         $this->registerVehicleHandler->handle($command);
     }
 
@@ -87,7 +87,7 @@ class FeatureContext implements Context
      */
     public function iTryToRegisterThisVehicleIntoMyFleet()
     {
-        $command = new RegisterVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->vehicle->getPlateNumber());
+        $command = new RegisterVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber());
         try {
             $this->registerVehicleHandler->handle($command);
         } catch (\RuntimeException $exception) {
@@ -118,7 +118,7 @@ class FeatureContext implements Context
      */
     public function thisVehicleHasBeenRegisteredIntoTheOtherUsersFleet()
     {
-        $command = new RegisterVehicleCommand($this->otherUserFleet->getId(), $this->vehicle->getId(), $this->vehicle->getPlateNumber());
+        $command = new RegisterVehicleCommand($this->otherUserFleet->getUserId(), $this->vehicle->getPlateNumber());
         $this->registerVehicleHandler->handle($command);
     }
 
@@ -135,7 +135,7 @@ class FeatureContext implements Context
      */
     public function iParkMyVehicleAtThisLocation()
     {
-        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        $command = new LocalizeVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber(), $this->location->getLat(), $this->location->getLng(), $this->location->getAlt());
         $this->localizeVehicleHandler->handle($command);
     }
 
@@ -144,10 +144,10 @@ class FeatureContext implements Context
      */
     public function theKnownLocationOfMyVehicleShouldVerifyThisLocation()
     {
-        $vehicle = $this->vehicleRepository->getById($this->vehicle->getId());
+        $vehicle = $this->vehicleRepository->getByPlateNumber($this->vehicle->getPlateNumber());
         $location = $vehicle->getLocation();
 
-        assert($location->getLat() === $this->location->getLat() && $location->getLng() === $this->location->getLng(), 'Vehicle is not parked at the expected location.');
+        assert($location->getLat() === $this->location->getLat() && $location->getLng() === $this->location->getLng() && $location->getAlt() === $this->location->getAlt(), 'Vehicle is not parked at the expected location.');
     }
 
     /**
@@ -155,7 +155,7 @@ class FeatureContext implements Context
      */
     public function myVehicleHasBeenParkedIntoThisLocation()
     {
-        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        $command = new LocalizeVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber(), $this->location->getLat(), $this->location->getLng(), $this->location->getAlt());
         $this->localizeVehicleHandler->handle($command);
     }
 
@@ -164,7 +164,7 @@ class FeatureContext implements Context
      */
     public function iTryToParkMyVehicleAtThisLocation()
     {
-        $command = new LocalizeVehicleCommand($this->myFleet->getId(), $this->vehicle->getId(), $this->location->getLat(), $this->location->getLng());
+        $command = new LocalizeVehicleCommand($this->myFleet->getUserId(), $this->vehicle->getPlateNumber(), $this->location->getLat(), $this->location->getLng(), $this->location->getAlt());
         try {
             $this->localizeVehicleHandler->handle($command);
         } catch (\RuntimeException $exception) {

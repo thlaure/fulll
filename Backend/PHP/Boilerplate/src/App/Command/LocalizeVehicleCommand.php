@@ -9,8 +9,8 @@ use Fulll\Domain\Model\Location;
  */
 class LocalizeVehicleCommand
 {
-    private int $fleetId;
-    private int $vehicleId;
+    private int $fleetUserId;
+    private string $plateNumber;
     private float $lat;
     private float $lng;
     private ?float $alt;
@@ -18,39 +18,71 @@ class LocalizeVehicleCommand
     /**
      * Constructs a new LocalizeVehicleCommand instance.
      *
-     * @param int      $fleetId      The ID of the fleet.
-     * @param int      $vehicleId    The ID of the vehicle.
+     * @param int      $fleetUserId      The user ID of the fleet.
+     * @param string   $plateNumber    The plate number of the vehicle.
      * @param float    $lat           The latitude coordinate.
      * @param float    $lng           The longitude coordinate.
-     * @param float    $alt           The altitude coordinate.
+     * @param ?float    $alt           The altitude coordinate.
      */
-    public function __construct(int $fleetId, int $vehicleId, float $lat, float $lng, float $alt = null)
+    public function __construct(int $fleetUserId, string $plateNumber, float $lat, float $lng, ?float $alt = null)
     {
-        $this->fleetId = $fleetId;
-        $this->vehicleId = $vehicleId;
+        $this->fleetUserId = $fleetUserId;
+        $this->plateNumber = $plateNumber;
+
+        $this->validateLatitude($lat);
+        $this->validateLongitude($lng);
+
         $this->lat = $lat;
         $this->lng = $lng;
         $this->alt = $alt;
     }
 
     /**
-     * Gets the fleet ID associated with the command.
-     *
-     * @return integer The fleet ID.
+     * Validates the latitude coordinate.
+     * 
+     * @param float $lat The latitude coordinate.
+     * 
+     * @return void
      */
-    public function getFleetId(): int
+    private function validateLatitude(float $lat): void
     {
-        return $this->fleetId;
+        if ($lat < -90 || $lat > 90) {
+            throw new \InvalidArgumentException('Invalid latitude value.');
+        }
     }
 
     /**
-     * Gets the vehicle ID associated with the command.
-     *
-     * @return integer The vehicle ID.
+     * Validates the longitude coordinate.
+     * 
+     * @param float $lng The longitude coordinate.
+     * 
+     * @return void
      */
-    public function getVehicleId(): int
+    private function validateLongitude(float $lng): void
     {
-        return $this->vehicleId;
+        if ($lng < -180 || $lng > 180) {
+            throw new \InvalidArgumentException('Invalid longitude value.');
+        }
+    }
+
+    /**
+     * Gets the fleet user ID associated with the command.
+     *
+     * @return integer The fleet user ID.
+     */
+    public function getFleetUserId(): int
+    {
+        return $this->fleetUserId;
+    }
+
+    /**
+     * Gets the vehicle plate number associated with the command.
+     *
+     * @return string The vehicle plate number.
+     */
+    public function getPlateNumber(): string
+    {
+        return $this->plateNumber;
     }
 
     /**
@@ -76,20 +108,10 @@ class LocalizeVehicleCommand
     /**
      * Gets the altitude coordinate associated with the command.
      *
-     * @return float The altitude coordinate.
+     * @return ?float The altitude coordinate.
      */
-    public function getAlt(): float
+    public function getAlt(): ?float
     {
         return $this->alt;
-    }
-
-    /**
-     * Creates a Location object from the command data.
-     *
-     * @return Location The location.
-     */
-    public function getLocation(): Location
-    {
-        return new Location($this->lat, $this->lng, $this->alt);
     }
 }
